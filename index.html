@@ -158,6 +158,7 @@
         .btn-backup { background: #1a2a1a; border: 1px solid var(--green); color: var(--green); }
         .btn-restore { background: #1a1a2a; border: 1px solid var(--blue); color: var(--blue); }
         .btn-reset-all { background: #1a0a0a; border: 1px solid var(--red); color: var(--red); }
+        .btn-reset-pin { background: #1a1000; border: 1px solid var(--orange); color: var(--orange); }
 
         .modal-warning { text-align: center; max-width: 380px; }
         .warning-icon { font-size: 50px; margin-bottom: 10px; animation: pulse 1.5s infinite; }
@@ -208,7 +209,7 @@
     <div class="lock-screen hidden" id="lockScreen">
         <div class="lock-icon">🔒</div>
         <div class="lock-title">MASUKKAN PIN</div>
-        <div class="lock-setup-text" id="lockSetupText" style="display:none;">Buat PIN 4 digit untuk pertama kali</div>
+        <div class="lock-setup-text" id="lockSetupText" style="display:none;">Buat PIN 4 digit</div>
         <div class="lock-input-row" id="lockDots">
             <div class="lock-dot"></div><div class="lock-dot"></div><div class="lock-dot"></div><div class="lock-dot"></div>
         </div>
@@ -291,8 +292,8 @@
         </div>
     </div>
 
-    <!-- MODALS (sama seperti sebelumnya) -->
-    <div class="modal-overlay" id="modalSettings"><div class="modal-box"><h3>⚙️ Pengaturan</h3><div class="settings-item"><span>🔒 Aktifkan PIN</span><label class="toggle-switch"><input type="checkbox" id="togglePIN" onchange="togglePIN()"><span class="toggle-slider"></span></label></div><div id="pinSettingsArea" style="display:none;"><div class="setup-row" style="margin-top:8px;"><input type="password" id="newPIN" placeholder="PIN 4 digit" maxlength="4"><button class="btn-set-nama" onclick="setNewPIN()">SIMPAN</button></div></div><hr style="border-color:#222;margin:12px 0;"><div class="settings-btn-row"><button class="btn-settings-action btn-backup" onclick="backupData()">📤 Backup Data (Download)</button><button class="btn-settings-action btn-restore" onclick="document.getElementById('fileInput').click()">📥 Restore Data (Upload)</button><button class="btn-settings-action btn-reset-all" onclick="resetDariSettings()">🗑️ Hapus Semua Data</button></div><input type="file" id="fileInput" accept=".json" onchange="restoreData(event)"><button class="btn-close-modal" onclick="tutupSettings()">TUTUP</button></div></div>
+    <!-- MODALS -->
+    <div class="modal-overlay" id="modalSettings"><div class="modal-box"><h3>⚙️ Pengaturan</h3><div class="settings-item"><span>🔒 Aktifkan PIN</span><label class="toggle-switch"><input type="checkbox" id="togglePIN" onchange="togglePIN()"><span class="toggle-slider"></span></label></div><div id="pinSettingsArea" style="display:none;"><div class="setup-row" style="margin-top:8px;"><input type="password" id="newPIN" placeholder="PIN 4 digit" maxlength="4"><button class="btn-set-nama" onclick="setNewPIN()">SIMPAN</button></div></div><hr style="border-color:#222;margin:12px 0;"><div class="settings-btn-row"><button class="btn-settings-action btn-backup" onclick="backupData()">📤 Backup Data (Download)</button><button class="btn-settings-action btn-restore" onclick="document.getElementById('fileInput').click()">📥 Restore Data (Upload)</button><button class="btn-settings-action btn-reset-pin" onclick="resetPIN()">🔄 Reset PIN (Lupa PIN)</button><button class="btn-settings-action btn-reset-all" onclick="resetDariSettings()">🗑️ Hapus Semua Data</button></div><input type="file" id="fileInput" accept=".json" onchange="restoreData(event)"><button class="btn-close-modal" onclick="tutupSettings()">TUTUP</button></div></div>
     <div class="modal-overlay" id="modalWarning"><div class="modal-box modal-warning"><div class="warning-icon">⚠️</div><h3 class="warning-title">PERINGATAN!</h3><p class="warning-text">Semua data lembur akan dihapus.<br>Tindakan ini <strong>TIDAK BISA DIURUNG!</strong></p><div class="warning-info"><span>📋 Riwayat lembur</span><span>👤 Nama karyawan</span><span>🎯 Batas OT</span></div><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalWarning')">❌ BATAL</button><button class="btn-warning-lanjut" id="btnWarningLanjut">✅ LANJUTKAN</button></div></div></div>
     <div class="modal-overlay" id="modalConfirm"><div class="modal-box modal-warning"><div class="warning-icon">🚨</div><h3 class="warning-title">KONFIRMASI TERAKHIR!</h3><p class="warning-text">Yakin ingin menghapus <strong>SEMUA</strong> data?<br><span style="color:#ff3b30;">Data tidak bisa dikembalikan!</span></p><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalConfirm')">❌ BATAL</button><button class="btn-warning-hapus" onclick="eksekusiHapus()">🗑️ HAPUS SEMUA</button></div></div></div>
     <div class="modal-overlay" id="modalDouble"><div class="modal-box modal-warning"><div class="warning-icon">⚠️</div><h3 class="warning-title">DATA SUDAH ADA!</h3><p class="warning-text" id="doubleText">Tanggal ini sudah ada data.<br>Timpa data lama?</p><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalDouble')">❌ BATAL</button><button class="btn-warning-lanjut" id="btnDoubleTimpa">✅ TIMPA</button></div></div></div>
@@ -320,23 +321,37 @@
     </div>
 
     <script>
-        let pinInput='',savedPIN=localStorage.getItem('pinV16')||'',isSettingPIN=!1,confirmPIN='',lockAttempts=0,lockTimeout=null;
-        let pinActive=localStorage.getItem('pinActiveV16')==='true';
+        let pinInput='',savedPIN=localStorage.getItem('pinV17')||'',isSettingPIN=!1,confirmPIN='',lockAttempts=0,lockTimeout=null;
+        let pinActive=localStorage.getItem('pinActiveV17')==='true';
         const lockScreen=document.getElementById('lockScreen'),lockDots=document.querySelectorAll('.lock-dot'),lockErrorMsg=document.getElementById('lockErrorMsg'),lockSetupText=document.getElementById('lockSetupText');
         function updateLockDots(){lockDots.forEach((d,i)=>{d.classList.toggle('filled',i<pinInput.length);d.classList.remove('error')})}
         function shakeLockDots(){lockDots.forEach(d=>d.classList.add('error'));setTimeout(()=>lockDots.forEach(d=>d.classList.remove('error')),500)}
-        function handleLockNum(num){if(num==='del'){pinInput=pinInput.slice(0,-1);updateLockDots();return}if(num==='ok'){if(pinInput.length<4){lockErrorMsg.textContent='PIN harus 4 digit';return}if(isSettingPIN){if(!confirmPIN){confirmPIN=pinInput;pinInput='';updateLockDots();lockSetupText.textContent='Konfirmasi PIN';lockSetupText.style.display='block';return}else{if(pinInput===confirmPIN){savedPIN=pinInput;localStorage.setItem('pinV16',savedPIN);isSettingPIN=!1;unlockApp();return}else{lockErrorMsg.textContent='PIN tidak cocok!';confirmPIN='';pinInput='';updateLockDots();lockSetupText.textContent='Buat PIN 4 digit';shakeLockDots();return}}}else{if(pinInput===savedPIN){unlockApp();return}else{lockAttempts++;lockErrorMsg.textContent=`PIN salah! (${lockAttempts}/3)`;pinInput='';updateLockDots();shakeLockDots();if(lockAttempts>=3){lockErrorMsg.textContent='Tunggu 30 detik...';document.querySelectorAll('.lock-num-btn').forEach(b=>b.disabled=!0);if(lockTimeout)clearTimeout(lockTimeout);lockTimeout=setTimeout(()=>{lockAttempts=0;lockErrorMsg.textContent='';document.querySelectorAll('.lock-num-btn').forEach(b=>b.disabled=!1)},30000)}return}}}if(pinInput.length<4){pinInput+=num;updateLockDots()}}
+        function handleLockNum(num){
+            if(num==='del'){pinInput=pinInput.slice(0,-1);updateLockDots();return}
+            if(num==='ok'){verifyPIN();return}
+            if(pinInput.length<4){pinInput+=num;updateLockDots();if(pinInput.length===4){setTimeout(()=>verifyPIN(),250)}}
+        }
+        function verifyPIN(){
+            if(pinInput.length<4){lockErrorMsg.textContent='PIN harus 4 digit';return}
+            if(isSettingPIN){
+                if(!confirmPIN){confirmPIN=pinInput;pinInput='';updateLockDots();lockSetupText.textContent='Konfirmasi PIN';lockSetupText.style.display='block';return}
+                else{if(pinInput===confirmPIN){savedPIN=pinInput;localStorage.setItem('pinV17',savedPIN);isSettingPIN=!1;unlockApp();return}else{lockErrorMsg.textContent='PIN tidak cocok!';confirmPIN='';pinInput='';updateLockDots();shakeLockDots();return}}
+            }else{
+                if(pinInput===savedPIN){unlockApp();return}
+                else{lockAttempts++;lockErrorMsg.textContent=`PIN salah! (${lockAttempts}/3)`;pinInput='';updateLockDots();shakeLockDots();if(lockAttempts>=3){lockErrorMsg.textContent='Tunggu 30 detik...';document.querySelectorAll('.lock-num-btn').forEach(b=>b.disabled=!0);if(lockTimeout)clearTimeout(lockTimeout);lockTimeout=setTimeout(()=>{lockAttempts=0;lockErrorMsg.textContent='';document.querySelectorAll('.lock-num-btn').forEach(b=>b.disabled=!1)},30000)}return}
+            }
+        }
         function unlockApp(){lockScreen.classList.add('hidden');lockAttempts=0;pinInput='';updateLockDots();lockErrorMsg.textContent=''}
         document.querySelectorAll('.lock-num-btn').forEach(b=>b.addEventListener('click',()=>handleLockNum(b.dataset.num)));
         document.addEventListener('keydown',function(e){if(!lockScreen.classList.contains('hidden')){if(e.key>='0'&&e.key<='9')handleLockNum(e.key);else if(e.key==='Backspace')handleLockNum('del');else if(e.key==='Enter')handleLockNum('ok')}});
         function checkLockScreen(){if(pinActive&&savedPIN){lockScreen.classList.remove('hidden');isSettingPIN=!1;lockSetupText.style.display='none'}else{lockScreen.classList.add('hidden')}}
 
-        function getDataLembur(){const d=localStorage.getItem('lemburV33');return d?JSON.parse(d):[]}
-        function simpanDataLembur(d){localStorage.setItem('lemburV33',JSON.stringify(d))}
-        function getNamaKaryawan(){return localStorage.getItem('namaV33')||''}
-        function simpanNamaKaryawan(n){localStorage.setItem('namaV33',n)}
-        function getBatasOT(){const v=localStorage.getItem('batasOTV33');return v?parseFloat(v):0}
-        function simpanBatasOT(v){localStorage.setItem('batasOTV33',v)}
+        function getDataLembur(){const d=localStorage.getItem('lemburV34');return d?JSON.parse(d):[]}
+        function simpanDataLembur(d){localStorage.setItem('lemburV34',JSON.stringify(d))}
+        function getNamaKaryawan(){return localStorage.getItem('namaV34')||''}
+        function simpanNamaKaryawan(n){localStorage.setItem('namaV34',n)}
+        function getBatasOT(){const v=localStorage.getItem('batasOTV34');return v?parseFloat(v):0}
+        function simpanBatasOT(v){localStorage.setItem('batasOTV34',v)}
         function getPeriodeSekarang(){const t=new Date(),tg=t.getDate(),bl=t.getMonth(),th=t.getFullYear();let m,a,k;if(tg>=26){m=new Date(th,bl,26);a=new Date(th,bl+1,25);k=`${th}-${bl}-n`}else{m=new Date(th,bl-1,26);a=new Date(th,bl,25);k=`${th}-${bl}-c`}return{mulai:m,akhir:a,key:k,label:`${m.getDate()}/${m.getMonth()+1}/${th} s/d ${a.getDate()}/${a.getMonth()+1}/${th}`}}
         function formatTanggal(s){const h=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const p=s.split('-');const t=new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));return`${h[t.getDay()]}, ${t.getDate()}/${t.getMonth()+1}`}
         function formatRupiah(n){return'Rp '+Math.round(n).toLocaleString('id-ID')}
@@ -359,34 +374,9 @@
         function setBatasOT(){const v=parseFloat(document.getElementById('batasOT').value);if(!v||v<1){alert('Batas OT minimal 1 jam!');return}simpanBatasOT(v);tampilkanBatasOT();renderTabel()}
         function tampilkanBatasOT(){const v=getBatasOT();document.getElementById('batasOT').value=v||'';document.getElementById('batasOTAktif').style.display=v?'inline':'none';if(v){document.getElementById('batasOTText').textContent=v+' JAM';document.getElementById('totalBatasOTDisplay').textContent=v}else{document.getElementById('totalBatasOTDisplay').textContent='-'}}
 
-        let pendingDoubleAction=null;
         function cekDoubleInput(tgl,nama,callback){const p=getPeriodeSekarang();const existing=getDataLembur().filter(i=>i.tanggal===tgl&&i.periodeKey===p.key&&i.nama===nama);if(existing.length>0){document.getElementById('doubleText').textContent=`Tanggal ${formatTanggal(tgl)} sudah ada data.\nTimpa data lama?`;document.getElementById('btnDoubleTimpa').onclick=function(){tutupModal('modalDouble');simpanDataLembur(getDataLembur().filter(i=>!(i.tanggal===tgl&&i.periodeKey===p.key&&i.nama===nama)));callback()};document.getElementById('modalDouble').classList.add('active');return false}return true}
 
-        function renderTabel(){
-            const p=getPeriodeSekarang();
-            const filterMode=document.getElementById('fPeriode')?.value||'current';
-            let s=getDataLembur();
-            if(filterMode==='current'){
-                s=s.filter(i=>i.periodeKey===p.key);
-            }
-            s.sort((a,b)=>new Date(a.tanggal)-new Date(b.tanggal));
-            const tb=document.getElementById('tabelBody');
-            if(s.length===0)tb.innerHTML='<tr class="no-data"><td colspan="10">👆 SETUP NAMA & INPUT DATA</td></tr>';
-            else tb.innerHTML=s.map((i,idx)=>{
-                const jk=hitungJamKali(i.jamAsli,i.jenisHari);
-                const rp=i.tarif?hitungRupiah(i.jamAsli,i.jenisHari,i.tarif):0;
-                const rpDisplay=i.tarif?formatRupiah(rp):'-';
-                const isHadir=i.jamAsli===0&&i.jenisHari==='biasa';
-                const isOff=i.jamAsli===0&&i.jenisHari==='merah';
-                let label,labelClass;
-                if(isHadir){label='HADIR';labelClass='hadir-tag'}
-                else if(isOff){label='OFF';labelClass='off-tag'}
-                else{label=i.jamAsli;labelClass=''}
-                return`<tr><td>${idx+1}</td><td>${formatTanggal(i.tanggal)}</td><td><span class="pengali-tag ${getTagClass(i.jenisHari)}">${getLabelJenis(i.jenisHari)}</span></td><td class="${labelClass}">${label}</td><td>${i.jamAsli===0?'-':getLabelPengali(i.jenisHari)}</td><td class="conv-ot-highlight">${jk.toFixed(1)}</td><td>${i.tarif?formatRupiah(i.tarif):'-'}</td><td class="total-rp-highlight">${rpDisplay}</td><td style="font-size:8px;max-width:60px;overflow:hidden;">${i.keterangan||'-'}</td><td><button class="btn-delete" onclick="hapusData('${i.id}')">x</button></td></tr>`;
-            }).join('');
-            updateTotalizer(s);
-            updateTanggalInput();
-        }
+        function renderTabel(){const p=getPeriodeSekarang();const filterMode=document.getElementById('fPeriode')?.value||'current';let s=getDataLembur();if(filterMode==='current'){s=s.filter(i=>i.periodeKey===p.key)}s.sort((a,b)=>new Date(a.tanggal)-new Date(b.tanggal));const tb=document.getElementById('tabelBody');if(s.length===0)tb.innerHTML='<tr class="no-data"><td colspan="10">👆 SETUP NAMA & INPUT DATA</td></tr>';else tb.innerHTML=s.map((i,idx)=>{const jk=hitungJamKali(i.jamAsli,i.jenisHari);const rp=i.tarif?hitungRupiah(i.jamAsli,i.jenisHari,i.tarif):0;const rpDisplay=i.tarif?formatRupiah(rp):'-';const isHadir=i.jamAsli===0&&i.jenisHari==='biasa';const isOff=i.jamAsli===0&&i.jenisHari==='merah';let label,labelClass;if(isHadir){label='HADIR';labelClass='hadir-tag'}else if(isOff){label='OFF';labelClass='off-tag'}else{label=i.jamAsli;labelClass=''}return`<tr><td>${idx+1}</td><td>${formatTanggal(i.tanggal)}</td><td><span class="pengali-tag ${getTagClass(i.jenisHari)}">${getLabelJenis(i.jenisHari)}</span></td><td class="${labelClass}">${label}</td><td>${i.jamAsli===0?'-':getLabelPengali(i.jenisHari)}</td><td class="conv-ot-highlight">${jk.toFixed(1)}</td><td>${i.tarif?formatRupiah(i.tarif):'-'}</td><td class="total-rp-highlight">${rpDisplay}</td><td style="font-size:8px;max-width:60px;overflow:hidden;">${i.keterangan||'-'}</td><td><button class="btn-delete" onclick="hapusData('${i.id}')">x</button></td></tr>`}).join('');updateTotalizer(s);updateTanggalInput()}
         function updateTanggalInput(){const p=getPeriodeSekarang(),inp=document.getElementById('tanggal');inp.min=fd(p.mulai);inp.max=fd(p.akhir);if(!inp.value){const t=new Date(),ts=fd(t);inp.value=isTanggalDalamPeriode(ts,p)?ts:fd(p.mulai)}cekLED()}
         function updateTrendBar(tk,B){if(!B||B<=0){document.getElementById('trendFill').style.width='0%';document.getElementById('trendPercent').textContent='Set OT';return}const pct=Math.min((tk/B)*100,100),f=document.getElementById('trendFill'),pt=document.getElementById('trendPercent');f.style.width=pct+'%';pt.textContent=pct.toFixed(0)+'%';f.classList.remove('safe','warning','danger');pt.classList.remove('safe','warning','danger');if(pct>=100){f.classList.add('danger');pt.classList.add('danger')}else if(pct>=75){f.classList.add('warning');pt.classList.add('warning')}else{f.classList.add('safe');pt.classList.add('safe')}}
         function updateTotalizer(s){const B=getBatasOT();let ta=0,tk=0,tr=0,hadir=0,off=0;s.forEach(i=>{ta+=i.jamAsli;if(i.jamAsli>0)tk+=hitungJamKali(i.jamAsli,i.jenisHari);else{if(i.jenisHari==='merah')off++;else hadir++}if(i.tarif&&i.jamAsli>0)tr+=hitungRupiah(i.jamAsli,i.jenisHari,i.tarif)});document.getElementById('totalJamAsli').textContent=ta.toFixed(1);document.getElementById('totalJamKali').textContent=tk.toFixed(1);document.getElementById('totalRupiah').textContent=formatRupiah(tr);document.getElementById('totalHadir').textContent=hadir;document.getElementById('totalOff').textContent=off;updateTrendBar(tk,B);const el=document.getElementById('totalJamKali'),ot=document.getElementById('overtimeAlert'),sj=document.getElementById('sisaJam');if(B>0&&tk>B){el.classList.add('warning');ot.classList.add('active');ot.innerHTML=`OVERTIME! MELEBIHI ${B} JAM (Kelebihan: ${(tk-B).toFixed(1)} jam)`;sj.className='sisa-jam bahaya show';sj.innerHTML=`KELEBIHAN: ${(tk-B).toFixed(1)} JAM`}else{el.classList.remove('warning');ot.classList.remove('active');sj.className='sisa-jam aman show';sj.innerHTML=B>0?`SISA: ${(B-tk).toFixed(1)} JAM`:'Batas OT belum diset'}}
@@ -394,27 +384,64 @@
         function addDataToTable(n,tgl,j,jam,k,tarif){const p=getPeriodeSekarang(),s=getDataLembur();s.push({id:generateUniqueId(),nama:n,tanggal:tgl,jenisHari:j,jamAsli:jam,keterangan:k,tarif:tarif||0,periodeKey:p.key});simpanDataLembur(s);renderTabel();setTimeout(()=>{const rows=document.querySelectorAll('#tabelBody tr'),lr=rows[rows.length-1];if(lr&&!lr.classList.contains('no-data')){lr.classList.add('new-row');setTimeout(()=>lr.classList.remove('new-row'),500)}},50)}
 
         document.getElementById('formLembur').addEventListener('submit',function(e){e.preventDefault();const n=getNamaKaryawan();if(!n){alert('SET NAMA DULU!');document.getElementById('namaKaryawan').focus();return}const tgl=document.getElementById('tanggal').value,j=document.getElementById('jenisHari').value,jam=parseFloat(document.getElementById('jamLembur').value),k=document.getElementById('keterangan').value.trim(),tarif=parseFloat(document.getElementById('tarifInput').value)||0;if(!tgl||!j||isNaN(jam)){alert('Lengkapi data!');return}const p=getPeriodeSekarang();if(!isTanggalDalamPeriode(tgl,p)){alert('Di luar periode!');return}const doAdd=()=>{addDataToTable(n,tgl,j,jam,k,tarif);document.getElementById('tanggal').value='';document.getElementById('jenisHari').value='';document.getElementById('jamLembur').value='';document.getElementById('keterangan').value='';document.getElementById('tarifInput').value='';updateTanggalInput();cekLED();showToast(`${n} | ${jam>0?hitungJamKali(jam,j).toFixed(1)+' JAM':formatTanggal(tgl)+' '+(j==='merah'?'OFF':'HADIR')} | ${tarif?formatRupiah(hitungRupiah(jam,j,tarif)):'-'}`)};if(!cekDoubleInput(tgl,n,doAdd))return;doAdd()});
-
         function quickInput(j,jam){const n=getNamaKaryawan();if(!n){alert('SET NAMA!');return}const tgl=document.getElementById('tanggal').value;if(!tgl){alert('PILIH TANGGAL!');return}if(!isTanggalDalamPeriode(tgl,getPeriodeSekarang())){alert('Di luar periode!');return}const tarif=parseFloat(document.getElementById('tarifInput').value)||0;const rp=hitungRupiah(jam,j,tarif);const label=jam===0?(j==='merah'?'OFF':'HADIR'):`${jam}j ${j==='biasa'?'Kerja':'Minggu'}`;const doAdd=()=>{addDataToTable(n,tgl,j,jam,document.getElementById('keterangan').value.trim(),tarif);document.getElementById('keterangan').value='';showToast(`${n} | ${label} | ${tarif?formatRupiah(rp):'-'}`)};if(!cekDoubleInput(tgl,n,doAdd))return;doAdd()}
-
         function hapusData(id){if(!confirm('HAPUS?'))return;simpanDataLembur(getDataLembur().filter(i=>i.id!==id));renderTabel()}
         function showToast(msg,c){const t=document.createElement('div');t.className='toast';t.textContent=msg;if(c==='red'){t.style.background='#1a0a0a';t.style.borderColor='var(--red)';t.style.color='var(--red)'}document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300)},2000)}
         function bukaSettings(){document.getElementById('togglePIN').checked=pinActive;document.getElementById('pinSettingsArea').style.display=pinActive?'block':'none';document.getElementById('modalSettings').classList.add('active')}
         function tutupSettings(){document.getElementById('modalSettings').classList.remove('active')}
-        function togglePIN(){pinActive=document.getElementById('togglePIN').checked;localStorage.setItem('pinActiveV16',pinActive);document.getElementById('pinSettingsArea').style.display=pinActive?'block':'none';if(!pinActive){savedPIN='';localStorage.setItem('pinV16','');lockScreen.classList.add('hidden');showToast('PIN dinonaktifkan','green')}else{isSettingPIN=!0;confirmPIN='';lockScreen.classList.remove('hidden');lockSetupText.style.display='block';lockSetupText.textContent='Buat PIN 4 digit'}}
-        function setNewPIN(){const np=document.getElementById('newPIN').value;if(np.length!==4||!/^\d+$/.test(np)){alert('PIN harus 4 digit!');return}savedPIN=np;localStorage.setItem('pinV16',np);localStorage.setItem('pinActiveV16','true');pinActive=!0;isSettingPIN=!1;lockScreen.classList.add('hidden');document.getElementById('newPIN').value='';tutupSettings();showToast('PIN disimpan','green')}
+        function togglePIN(){pinActive=document.getElementById('togglePIN').checked;localStorage.setItem('pinActiveV17',pinActive);document.getElementById('pinSettingsArea').style.display=pinActive?'block':'none';if(!pinActive){savedPIN='';localStorage.setItem('pinV17','');lockScreen.classList.add('hidden');showToast('PIN dinonaktifkan','green')}else{isSettingPIN=!0;confirmPIN='';lockScreen.classList.remove('hidden');lockSetupText.style.display='block';lockSetupText.textContent='Buat PIN 4 digit'}}
+        function setNewPIN(){const np=document.getElementById('newPIN').value;if(np.length!==4||!/^\d+$/.test(np)){alert('PIN harus 4 digit!');return}savedPIN=np;localStorage.setItem('pinV17',np);localStorage.setItem('pinActiveV17','true');pinActive=!0;isSettingPIN=!1;lockScreen.classList.add('hidden');document.getElementById('newPIN').value='';tutupSettings();showToast('PIN disimpan','green')}
+        function resetPIN(){if(!confirm('Reset PIN?\n\nPIN akan dihapus. Anda harus membuat PIN baru.'))return;localStorage.removeItem('pinV17');localStorage.setItem('pinActiveV17','false');savedPIN='';pinActive=!1;isSettingPIN=!1;lockScreen.classList.add('hidden');tutupSettings();showToast('PIN berhasil direset','green')}
         function backupData(){const d={lembur:getDataLembur(),nama:getNamaKaryawan(),batasOT:getBatasOT(),pinActive,pin:savedPIN};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='backup_lembur_'+new Date().toISOString().split('T')[0]+'.json';a.click();showToast('Backup berhasil')}
-        function restoreData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(!d.lembur){alert('File tidak valid!');return}if(!confirm('Restore? Data saat ini akan ditimpa!'))return;const lemburWithId=d.lembur.map(i=>({...i,id:i.id||generateUniqueId()}));simpanDataLembur(lemburWithId);if(d.nama)simpanNamaKaryawan(d.nama);if(d.batasOT!==undefined){simpanBatasOT(Number(d.batasOT))}else{simpanBatasOT(0)}document.getElementById('fPeriode').value='all';renderTabel();tampilkanNamaAktif();tampilkanBatasOT();if(d.pinActive!==undefined){localStorage.setItem('pinActiveV16',d.pinActive);pinActive=d.pinActive}if(d.pin){localStorage.setItem('pinV16',d.pin);savedPIN=d.pin}checkLockScreen();showToast('Data direstore','green')}catch(er){alert('File rusak!')}};r.readAsText(f);e.target.value=''}
+        function restoreData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(!d.lembur){alert('File tidak valid!');return}if(!confirm('Restore? Data saat ini akan ditimpa!'))return;const lemburWithId=d.lembur.map(i=>({...i,id:i.id||generateUniqueId()}));simpanDataLembur(lemburWithId);if(d.nama)simpanNamaKaryawan(d.nama);if(d.batasOT!==undefined){simpanBatasOT(Number(d.batasOT))}else{simpanBatasOT(0)}document.getElementById('fPeriode').value='all';renderTabel();tampilkanNamaAktif();tampilkanBatasOT();if(d.pin){localStorage.setItem('pinV17',d.pin);savedPIN=d.pin}if(d.pinActive!==undefined){localStorage.setItem('pinActiveV17',d.pinActive);pinActive=d.pinActive}checkLockScreen();showToast('Data direstore','green')}catch(er){alert('File rusak!')}};r.readAsText(f);e.target.value=''}
         function resetDariSettings(){tutupSettings();setTimeout(resetSemuaData,300)}
         function resetSemuaData(){document.getElementById('btnWarningLanjut').onclick=function(){tutupModal('modalWarning');document.getElementById('modalConfirm').classList.add('active')};document.getElementById('modalWarning').classList.add('active')}
-        function eksekusiHapus(){localStorage.removeItem('lemburV33');localStorage.removeItem('namaV33');localStorage.removeItem('batasOTV33');tutupModal('modalConfirm');renderTabel();tampilkanNamaAktif();tampilkanBatasOT();cekLED();showToast('Semua data berhasil dihapus','red')}
+        function eksekusiHapus(){localStorage.removeItem('lemburV34');localStorage.removeItem('namaV34');localStorage.removeItem('batasOTV34');tutupModal('modalConfirm');renderTabel();tampilkanNamaAktif();tampilkanBatasOT();cekLED();showToast('Semua data berhasil dihapus','red')}
         function tutupModal(id){document.getElementById(id).classList.remove('active')}
         ['modalSettings','modalWarning','modalConfirm','modalExport','modalDouble'].forEach(id=>{document.getElementById(id).addEventListener('click',function(e){if(e.target===this)tutupModal(id)})});
 
         let srk='all';
-        function bukaModalExport(){if(!getNamaKaryawan()){alert('SET NAMA DULU!');return}const p=getPeriodeSekarang();if(getDataLembur().filter(i=>i.periodeKey===p.key).length===0){alert('BELUM ADA DATA!');return}const r=getWeeklyRanges();document.getElementById('pdfTglMulai').value=fd(r['all'].mulai);document.getElementById('pdfTglAkhir').value=fd(r['all'].akhir);document.getElementById('pdfTglMulai').min=fd(p.mulai);document.getElementById('pdfTglMulai').max=fd(p.akhir);document.getElementById('pdfTglAkhir').min=fd(p.mulai);document.getElementById('pdfTglAkhir').max=fd(p.akhir);srk='all';document.querySelectorAll('.quick-btn').forEach(b=>b.classList.toggle('active-range',b.dataset.range==='all'));document.getElementById('modalExport').classList.add('active')}
+        function bukaModalExport(){
+            if(!getNamaKaryawan()){alert('SET NAMA DULU!');return}
+            const filterMode=document.getElementById('fPeriode')?.value||'current';
+            const p=getPeriodeSekarang();
+            let data=getDataLembur();
+            if(filterMode==='current'){data=data.filter(i=>i.periodeKey===p.key)}
+            if(data.length===0){alert('BELUM ADA DATA!');return}
+            const r=getWeeklyRanges();
+            document.getElementById('pdfTglMulai').value=fd(r['all'].mulai);
+            document.getElementById('pdfTglAkhir').value=fd(r['all'].akhir);
+            document.getElementById('pdfTglMulai').min=fd(p.mulai);
+            document.getElementById('pdfTglMulai').max=fd(p.akhir);
+            document.getElementById('pdfTglAkhir').min=fd(p.mulai);
+            document.getElementById('pdfTglAkhir').max=fd(p.akhir);
+            srk='all';document.querySelectorAll('.quick-btn').forEach(b=>b.classList.toggle('active-range',b.dataset.range==='all'));
+            document.getElementById('modalExport').classList.add('active');
+        }
         document.getElementById('quickRangeBtns').addEventListener('click',function(e){if(!e.target.classList.contains('quick-btn'))return;srk=e.target.dataset.range;document.querySelectorAll('.quick-btn').forEach(b=>b.classList.toggle('active-range',b.dataset.range===srk));const r=getWeeklyRanges()[srk];if(r){document.getElementById('pdfTglMulai').value=fd(r.mulai);document.getElementById('pdfTglAkhir').value=fd(r.akhir)}});
-        function cetakPDF(){const B=getBatasOT(),tm=document.getElementById('pdfTglMulai').value,ta=document.getElementById('pdfTglAkhir').value;if(!tm||!ta||ta<tm){alert('Tanggal tidak valid!');return}const s=getDataLembur(),n=getNamaKaryawan(),d=s.filter(i=>i.tanggal>=tm&&i.tanggal<=ta&&i.nama===n);if(d.length===0){alert('TIDAK ADA DATA!');return}tutupModal('modalExport');document.getElementById('printNama').textContent=n;const rl=Object.values(getWeeklyRanges()).find(r=>fd(r.mulai)===tm&&fd(r.akhir)===ta)?.label||`${formatTanggalPendek(tm)} - ${formatTanggalPendek(ta)}`;document.getElementById('printRangeLabel').textContent=rl;document.getElementById('printPeriode').textContent=getBulanLabel();document.getElementById('printTglCetak').textContent=`${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`;let ta2=0,tk2=0,tr2=0;document.getElementById('printTabelBody').innerHTML=d.map((i,idx)=>{const jk=hitungJamKali(i.jamAsli,i.jenisHari);const rp=i.tarif?hitungRupiah(i.jamAsli,i.jenisHari,i.tarif):0;ta2+=i.jamAsli;if(i.jamAsli>0)tk2+=jk;tr2+=rp;let actLabel=i.jamAsli===0?(i.jenisHari==='merah'?'OFF':'HADIR'):i.jamAsli+' j';return`<tr><td>${idx+1}</td><td>${formatTanggal(i.tanggal)}</td><td>${getLabelJenis(i.jenisHari)}</td><td>${actLabel}</td><td>${i.jamAsli===0?'-':getLabelPengali(i.jenisHari)}</td><td>${jk.toFixed(1)} j</td><td>${i.tarif?formatRupiah(i.tarif):'-'}</td><td>${i.tarif?formatRupiah(rp):'-'}</td><td>${i.keterangan||'-'}</td></tr>`}).join('');document.getElementById('printTotalAsli').textContent=ta2.toFixed(1);document.getElementById('printTotalKali').textContent=tk2.toFixed(1);document.getElementById('printTotalRp').textContent=formatRupiah(tr2);const isOT=B>0&&tk2>B,sel=Math.abs(tk2-B).toFixed(1);document.getElementById('printStatusOT').innerHTML=isOT?'<span class="value-ot-warning">MELEBIHI '+B+' JAM (Kelebihan: '+sel+' jam)</span>':'<span class="value-ot-safe">DALAM BATAS NORMAL'+(B>0?' (Sisa: '+sel+' jam)':'')+'</span>';setTimeout(()=>window.print(),400)}
+        function cetakPDF(){
+            const B=getBatasOT(),tm=document.getElementById('pdfTglMulai').value,ta=document.getElementById('pdfTglAkhir').value;
+            if(!tm||!ta||ta<tm){alert('Tanggal tidak valid!');return}
+            const filterMode=document.getElementById('fPeriode')?.value||'current';
+            let allData=getDataLembur();
+            if(filterMode==='current'){allData=allData.filter(i=>i.periodeKey===getPeriodeSekarang().key)}
+            const n=getNamaKaryawan(),d=allData.filter(i=>i.tanggal>=tm&&i.tanggal<=ta&&i.nama===n);
+            if(d.length===0){alert('TIDAK ADA DATA!');return}
+            tutupModal('modalExport');
+            document.getElementById('printNama').textContent=n;
+            const rl=Object.values(getWeeklyRanges()).find(r=>fd(r.mulai)===tm&&fd(r.akhir)===ta)?.label||`${formatTanggalPendek(tm)} - ${formatTanggalPendek(ta)}`;
+            document.getElementById('printRangeLabel').textContent=rl;
+            document.getElementById('printPeriode').textContent=getBulanLabel();
+            document.getElementById('printTglCetak').textContent=`${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`;
+            let ta2=0,tk2=0,tr2=0;
+            document.getElementById('printTabelBody').innerHTML=d.map((i,idx)=>{const jk=hitungJamKali(i.jamAsli,i.jenisHari);const rp=i.tarif?hitungRupiah(i.jamAsli,i.jenisHari,i.tarif):0;ta2+=i.jamAsli;if(i.jamAsli>0)tk2+=jk;tr2+=rp;let actLabel=i.jamAsli===0?(i.jenisHari==='merah'?'OFF':'HADIR'):i.jamAsli+' j';return`<tr><td>${idx+1}</td><td>${formatTanggal(i.tanggal)}</td><td>${getLabelJenis(i.jenisHari)}</td><td>${actLabel}</td><td>${i.jamAsli===0?'-':getLabelPengali(i.jenisHari)}</td><td>${jk.toFixed(1)} j</td><td>${i.tarif?formatRupiah(i.tarif):'-'}</td><td>${i.tarif?formatRupiah(rp):'-'}</td><td>${i.keterangan||'-'}</td></tr>`}).join('');
+            document.getElementById('printTotalAsli').textContent=ta2.toFixed(1);
+            document.getElementById('printTotalKali').textContent=tk2.toFixed(1);
+            document.getElementById('printTotalRp').textContent=formatRupiah(tr2);
+            const isOT=B>0&&tk2>B,sel=Math.abs(tk2-B).toFixed(1);
+            document.getElementById('printStatusOT').innerHTML=isOT?'<span class="value-ot-warning">MELEBIHI '+B+' JAM (Kelebihan: '+sel+' jam)</span>':'<span class="value-ot-safe">DALAM BATAS NORMAL'+(B>0?' (Sisa: '+sel+' jam)':'')+'</span>';
+            setTimeout(()=>window.print(),400);
+        }
         document.getElementById('jenisHari').addEventListener('change',function(){const jam=document.getElementById('jamLembur');if(this.value==='biasa'){jam.min=1;if(!jam.value||parseFloat(jam.value)<1)jam.value=1;document.getElementById('infoMin').style.display='block'}else{jam.min=0;document.getElementById('infoMin').style.display='none'}cekLED()});
         document.getElementById('tanggal').addEventListener('change',function(){if(!this.value)return;const t=new Date(this.value+'T00:00:00');const j=document.getElementById('jenisHari'),jam=document.getElementById('jamLembur');if(t.getDay()===0){j.value='merah';jam.min=0;document.getElementById('infoMin').style.display='none'}else{j.value='biasa';jam.min=1;document.getElementById('infoMin').style.display='block'}cekLED()});
         document.getElementById('namaKaryawan').addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();setNamaKaryawan()}});
