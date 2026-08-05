@@ -207,7 +207,7 @@
 <body>
 
     <div class="lock-screen hidden" id="lockScreen">
-        <div class="lock-icon">🔒</div>
+        <div class="lock-icon">&#x1f512;</div>
         <div class="lock-title">MASUKKAN PIN</div>
         <div class="lock-setup-text" id="lockSetupText" style="display:none;">Buat PIN 4 digit</div>
         <div class="lock-input-row" id="lockDots">
@@ -218,7 +218,7 @@
             <button class="lock-num-btn" data-num="1">1</button><button class="lock-num-btn" data-num="2">2</button><button class="lock-num-btn" data-num="3">3</button>
             <button class="lock-num-btn" data-num="4">4</button><button class="lock-num-btn" data-num="5">5</button><button class="lock-num-btn" data-num="6">6</button>
             <button class="lock-num-btn" data-num="7">7</button><button class="lock-num-btn" data-num="8">8</button><button class="lock-num-btn" data-num="9">9</button>
-            <button class="lock-num-btn del" data-num="del">⌫</button><button class="lock-num-btn" data-num="0">0</button><button class="lock-num-btn del" data-num="ok">OK</button>
+            <button class="lock-num-btn del" data-num="del">&larr;</button><button class="lock-num-btn" data-num="0">0</button><button class="lock-num-btn del" data-num="ok">OK</button>
         </div>
     </div>
 
@@ -241,32 +241,32 @@
                 <button class="btn-set-ot" onclick="setBatasOT()">SET OT</button>
             </div>
             <div class="tag-row">
-                <span id="namaAktifDisplay" style="display:none;"><span class="nama-aktif-tag" id="namaAktifText"></span><button onclick="gantiNama()" class="btn-edit-nama">✏️ GANTI</button></span>
+                <span id="namaAktifDisplay" style="display:none;"><span class="nama-aktif-tag" id="namaAktifText"></span><button onclick="gantiNama()" class="btn-edit-nama">GANTI</button></span>
                 <span id="batasOTAktif" style="display:none;"><span class="batas-ot-tag" id="batasOTText">56 JAM</span></span>
             </div>
 
             <div class="section-title">2. Input Lembur / Kehadiran</div>
             <div class="pengali-row">
-                <span class="pengali-tag tag-biasa">KERJA: 1jam ×1.5 | >1jam ×2</span>
-                <span class="pengali-tag tag-merah">MINGGU/MERAH: ×2</span>
+                <span class="pengali-tag tag-biasa">KERJA: 1jam x1.5 | &gt;1jam x2</span>
+                <span class="pengali-tag tag-merah">MINGGU/MERAH: x2</span>
             </div>
             <div class="quick-input-row">
-                <button class="quick-btn-input" onclick="quickInput('biasa',1)">⚡ +1j Kerja</button>
-                <button class="quick-btn-input" onclick="quickInput('biasa',2)">⚡ +2j Kerja</button>
-                <button class="quick-btn-input" onclick="quickInput('merah',7)">⚡ +7j Minggu</button>
-                <button class="quick-btn-input" onclick="quickInput('biasa',0)" style="color:var(--blue);border-color:#1a3a4a;">📋 Hadir</button>
+                <button class="quick-btn-input" onclick="quickInput('biasa',1)">+1j Kerja</button>
+                <button class="quick-btn-input" onclick="quickInput('biasa',2)">+2j Kerja</button>
+                <button class="quick-btn-input" onclick="quickInput('merah',7)">+7j Minggu</button>
+                <button class="quick-btn-input" onclick="quickInput('biasa',0)" style="color:var(--blue);border-color:#1a3a4a;">Hadir</button>
             </div>
             <form id="formLembur">
                 <div class="row">
-                    <div class="col-with-led"><label>📅 TANGGAL</label><div class="input-led-row"><input type="date" id="tanggal" required onchange="cekLED()"><span class="led-indicator led-off" id="ledTgl"></span></div></div>
-                    <div class="col-with-led"><label>🏷️ JENIS HARI</label><div class="input-led-row"><select id="jenisHari" required onchange="cekLED()"><option value="">📋 PILIH</option><option value="biasa">💼 HARI KERJA</option><option value="merah">🔥 MINGGU / MERAH</option></select><span class="led-indicator led-off" id="ledJenis"></span></div></div>
+                    <div class="col-with-led"><label>TANGGAL</label><div class="input-led-row"><input type="date" id="tanggal" required onchange="cekLED()"><span class="led-indicator led-off" id="ledTgl"></span></div></div>
+                    <div class="col-with-led"><label>JENIS HARI</label><div class="input-led-row"><select id="jenisHari" required onchange="cekLED()"><option value="">PILIH</option><option value="biasa">HARI KERJA</option><option value="merah">MINGGU / MERAH</option></select><span class="led-indicator led-off" id="ledJenis"></span></div></div>
                 </div>
-                <div class="row"><div class="col-with-led"><label>⏰ JAM (0 = Hadir/OFF)</label><div class="input-led-row"><input type="number" id="jamLembur" placeholder="0" min="0" step="0.5" required oninput="cekLED()"><span class="led-indicator led-off" id="ledJam"></span></div></div></div>
+                <div class="row"><div class="col-with-led"><label>JAM (0 = Hadir/OFF)</label><div class="input-led-row"><input type="number" id="jamLembur" placeholder="0" min="0" step="0.5" required oninput="cekLED()"><span class="led-indicator led-off" id="ledJam"></span></div></div></div>
                 <div class="row">
-                    <div class="col"><label>💰 TARIF / JAM (Rp)</label><input type="number" id="tarifInput" placeholder="Kosongkan jika tidak perlu" min="0" step="1" value=""></div>
-                    <div class="col"><label>📝 KETERANGAN</label><input type="text" id="keterangan" placeholder="Kosongkan jika tidak perlu..."></div>
+                    <div class="col"><label>TARIF / JAM (Rp)</label><input type="number" id="tarifInput" placeholder="Kosongkan jika tidak perlu" min="0" step="1" value=""></div>
+                    <div class="col"><label>KETERANGAN</label><input type="text" id="keterangan" placeholder="Kosongkan jika tidak perlu..."></div>
                 </div>
-                <button type="submit" class="btn-add">➕ TAMBAH DATA</button>
+                <button type="submit" class="btn-add">TAMBAH DATA</button>
             </form>
 
             <div class="section-title">3. Data</div>
@@ -276,7 +276,7 @@
                     <option value="all">Semua Periode</option>
                 </select>
             </div>
-            <div class="table-scroll"><table><thead><tr><th>NO</th><th>TANGGAL</th><th>JENIS</th><th>ACTUAL</th><th>×</th><th>CONV OT</th><th>TARIF</th><th>TOTAL</th><th>KET</th><th>X</th></tr></thead><tbody id="tabelBody"><tr class="no-data"><td colspan="10">👆 SETUP NAMA & INPUT DATA</td></tr></tbody></table></div>
+            <div class="table-scroll"><table><thead><tr><th>NO</th><th>TANGGAL</th><th>JENIS</th><th>ACTUAL</th><th>x</th><th>CONV OT</th><th>TARIF</th><th>TOTAL</th><th>KET</th><th></th></tr></thead><tbody id="tabelBody"><tr class="no-data"><td colspan="10">SETUP NAMA & INPUT DATA</td></tr></tbody></table></div>
 
             <div class="totalizer-box">
                 <div class="total-item"><div class="total-label">JAM ACTUAL</div><div class="total-value" id="totalJamAsli">0</div></div>
@@ -286,18 +286,18 @@
                 <div class="total-item"><div class="total-label">HADIR</div><div class="total-value hadir" id="totalHadir">0</div></div>
                 <div class="total-item"><div class="total-label">OFF</div><div class="total-value off" id="totalOff">0</div></div>
             </div>
-            <div class="trend-container"><div class="trend-header"><span class="trend-label">⚡ PROGRESS OT</span><span class="trend-percent safe" id="trendPercent">0%</span></div><div class="trend-bar-outer"><div class="trend-bar-inner safe" id="trendFill"></div></div></div>
-            <div class="overtime-alert" id="overtimeAlert">🚨 OVERTIME!</div><div class="sisa-jam" id="sisaJam"></div>
-            <div class="btn-row"><button class="btn-export" onclick="bukaModalExport()">📄 EXPORT PDF</button><button class="btn-reset" onclick="resetSemuaData()">🗑️ RESET</button></div>
+            <div class="trend-container"><div class="trend-header"><span class="trend-label">PROGRESS OT</span><span class="trend-percent safe" id="trendPercent">0%</span></div><div class="trend-bar-outer"><div class="trend-bar-inner safe" id="trendFill"></div></div></div>
+            <div class="overtime-alert" id="overtimeAlert">OVERTIME!</div><div class="sisa-jam" id="sisaJam"></div>
+            <div class="btn-row"><button class="btn-export" onclick="bukaModalExport()">EXPORT PDF</button><button class="btn-reset" onclick="resetSemuaData()">RESET</button></div>
         </div>
     </div>
 
     <!-- MODALS -->
-    <div class="modal-overlay" id="modalSettings"><div class="modal-box"><h3>⚙️ Pengaturan</h3><div class="settings-item"><span>🔒 Aktifkan PIN</span><label class="toggle-switch"><input type="checkbox" id="togglePIN" onchange="togglePIN()"><span class="toggle-slider"></span></label></div><div id="pinSettingsArea" style="display:none;"><div class="setup-row" style="margin-top:8px;"><input type="password" id="newPIN" placeholder="PIN 4 digit" maxlength="4"><button class="btn-set-nama" onclick="setNewPIN()">SIMPAN</button></div></div><hr style="border-color:#222;margin:12px 0;"><div class="settings-btn-row"><button class="btn-settings-action btn-backup" onclick="backupData()">📤 Backup Data (Download)</button><button class="btn-settings-action btn-restore" onclick="document.getElementById('fileInput').click()">📥 Restore Data (Upload)</button><button class="btn-settings-action btn-reset-pin" onclick="resetPIN()">🔄 Reset PIN (Lupa PIN)</button><button class="btn-settings-action btn-reset-all" onclick="resetDariSettings()">🗑️ Hapus Semua Data</button></div><input type="file" id="fileInput" accept=".json" onchange="restoreData(event)"><button class="btn-close-modal" onclick="tutupSettings()">TUTUP</button></div></div>
-    <div class="modal-overlay" id="modalWarning"><div class="modal-box modal-warning"><div class="warning-icon">⚠️</div><h3 class="warning-title">PERINGATAN!</h3><p class="warning-text">Semua data lembur akan dihapus.<br>Tindakan ini <strong>TIDAK BISA DIURUNG!</strong></p><div class="warning-info"><span>📋 Riwayat lembur</span><span>👤 Nama karyawan</span><span>🎯 Batas OT</span></div><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalWarning')">❌ BATAL</button><button class="btn-warning-lanjut" id="btnWarningLanjut">✅ LANJUTKAN</button></div></div></div>
-    <div class="modal-overlay" id="modalConfirm"><div class="modal-box modal-warning"><div class="warning-icon">🚨</div><h3 class="warning-title">KONFIRMASI TERAKHIR!</h3><p class="warning-text">Yakin ingin menghapus <strong>SEMUA</strong> data?<br><span style="color:#ff3b30;">Data tidak bisa dikembalikan!</span></p><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalConfirm')">❌ BATAL</button><button class="btn-warning-hapus" onclick="eksekusiHapus()">🗑️ HAPUS SEMUA</button></div></div></div>
-    <div class="modal-overlay" id="modalDouble"><div class="modal-box modal-warning"><div class="warning-icon">⚠️</div><h3 class="warning-title">DATA SUDAH ADA!</h3><p class="warning-text" id="doubleText">Tanggal ini sudah ada data.<br>Timpa data lama?</p><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalDouble')">❌ BATAL</button><button class="btn-warning-lanjut" id="btnDoubleTimpa">✅ TIMPA</button></div></div></div>
-    <div class="modal-overlay" id="modalExport"><div class="modal-box"><h3>📄 PILIH RANGE MINGGUAN</h3><div class="quick-range-btns" id="quickRangeBtns"><button class="quick-btn" data-range="minggu1">26-01</button><button class="quick-btn" data-range="minggu2">02-09</button><button class="quick-btn" data-range="minggu3">10-17</button><button class="quick-btn" data-range="minggu4">18-25</button><button class="quick-btn" data-range="all">26-25</button></div><div class="row"><div class="col"><label>MULAI</label><input type="date" id="pdfTglMulai"></div><div class="col"><label>AKHIR</label><input type="date" id="pdfTglAkhir"></div></div><button class="btn-print" onclick="cetakPDF()">🖨️ PRINT / SAVE PDF</button><button class="btn-close-modal" onclick="tutupModal('modalExport')">BATAL</button></div></div>
+    <div class="modal-overlay" id="modalSettings"><div class="modal-box"><h3>Pengaturan</h3><div class="settings-item"><span>Aktifkan PIN</span><label class="toggle-switch"><input type="checkbox" id="togglePIN" onchange="togglePIN()"><span class="toggle-slider"></span></label></div><div id="pinSettingsArea" style="display:none;"><div class="setup-row" style="margin-top:8px;"><input type="password" id="newPIN" placeholder="PIN 4 digit" maxlength="4"><button class="btn-set-nama" onclick="setNewPIN()">SIMPAN</button></div></div><hr style="border-color:#222;margin:12px 0;"><div class="settings-btn-row"><button class="btn-settings-action btn-backup" onclick="backupData()">Backup Data (Download)</button><button class="btn-settings-action btn-restore" onclick="document.getElementById('fileInput').click()">Restore Data (Upload)</button><button class="btn-settings-action btn-reset-pin" onclick="resetPIN()">Reset PIN (Lupa PIN)</button><button class="btn-settings-action btn-reset-all" onclick="resetDariSettings()">Hapus Semua Data</button></div><input type="file" id="fileInput" accept=".json" onchange="restoreData(event)"><button class="btn-close-modal" onclick="tutupSettings()">TUTUP</button></div></div>
+    <div class="modal-overlay" id="modalWarning"><div class="modal-box modal-warning"><div class="warning-icon">!</div><h3 class="warning-title">PERINGATAN!</h3><p class="warning-text">Semua data lembur akan dihapus.<br>Tindakan ini <strong>TIDAK BISA DIURUNG!</strong></p><div class="warning-info"><span>Riwayat lembur</span><span>Nama karyawan</span><span>Batas OT</span></div><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalWarning')">BATAL</button><button class="btn-warning-lanjut" id="btnWarningLanjut">LANJUTKAN</button></div></div></div>
+    <div class="modal-overlay" id="modalConfirm"><div class="modal-box modal-warning"><div class="warning-icon">!</div><h3 class="warning-title">KONFIRMASI TERAKHIR!</h3><p class="warning-text">Yakin ingin menghapus <strong>SEMUA</strong> data?<br><span style="color:#ff3b30;">Data tidak bisa dikembalikan!</span></p><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalConfirm')">BATAL</button><button class="btn-warning-hapus" onclick="eksekusiHapus()">HAPUS SEMUA</button></div></div></div>
+    <div class="modal-overlay" id="modalDouble"><div class="modal-box modal-warning"><div class="warning-icon">!</div><h3 class="warning-title">DATA SUDAH ADA!</h3><p class="warning-text" id="doubleText">Tanggal ini sudah ada data.<br>Timpa data lama?</p><div class="warning-btns"><button class="btn-warning-batal" onclick="tutupModal('modalDouble')">BATAL</button><button class="btn-warning-lanjut" id="btnDoubleTimpa">TIMPA</button></div></div></div>
+    <div class="modal-overlay" id="modalExport"><div class="modal-box"><h3>PILIH RANGE MINGGUAN</h3><div class="quick-range-btns" id="quickRangeBtns"><button class="quick-btn" data-range="minggu1">26-01</button><button class="quick-btn" data-range="minggu2">02-09</button><button class="quick-btn" data-range="minggu3">10-17</button><button class="quick-btn" data-range="minggu4">18-25</button><button class="quick-btn" data-range="all">26-25</button></div><div class="row"><div class="col"><label>MULAI</label><input type="date" id="pdfTglMulai"></div><div class="col"><label>AKHIR</label><input type="date" id="pdfTglAkhir"></div></div><button class="btn-print" onclick="cetakPDF()">PRINT / SAVE PDF</button><button class="btn-close-modal" onclick="tutupModal('modalExport')">BATAL</button></div></div>
 
     <div id="printContent">
         <div class="print-wrapper">
@@ -311,8 +311,8 @@
                 </div>
                 <table class="print-table"><thead><tr><th>No</th><th>Tanggal</th><th>Jenis Hari</th><th>Jam Actual</th><th>Pengali</th><th>Conv to OT</th><th>Tarif</th><th>Total</th><th>Ket</th></tr></thead><tbody id="printTabelBody"></tbody></table>
                 <div class="print-total-box">
-                    <p>📊 Total Jam Actual : <strong><span id="printTotalAsli"></span> jam</strong> | Total Conv to OT : <strong><span id="printTotalKali"></span> jam</strong> | Total Rupiah : <strong><span id="printTotalRp"></span></strong></p>
-                    <p>📊 Status Overtime : <span id="printStatusOT"></span></p>
+                    <p>Total Jam Actual : <strong><span id="printTotalAsli"></span> jam</strong> | Total Conv to OT : <strong><span id="printTotalKali"></span> jam</strong> | Total Rupiah : <strong><span id="printTotalRp"></span></strong></p>
+                    <p>Status Overtime : <span id="printStatusOT"></span></p>
                 </div>
                 <div class="print-footer">Dokumen dibuat otomatis oleh Sistem Input Lembur</div>
                 <div class="print-footer-small">Support by: E&I Department</div>
@@ -376,7 +376,7 @@
 
         function cekDoubleInput(tgl,nama,callback){const p=getPeriodeSekarang();const existing=getDataLembur().filter(i=>i.tanggal===tgl&&i.periodeKey===p.key&&i.nama===nama);if(existing.length>0){document.getElementById('doubleText').textContent=`Tanggal ${formatTanggal(tgl)} sudah ada data.\nTimpa data lama?`;document.getElementById('btnDoubleTimpa').onclick=function(){tutupModal('modalDouble');simpanDataLembur(getDataLembur().filter(i=>!(i.tanggal===tgl&&i.periodeKey===p.key&&i.nama===nama)));callback()};document.getElementById('modalDouble').classList.add('active');return false}return true}
 
-        function renderTabel(){const p=getPeriodeSekarang();const filterMode=document.getElementById('fPeriode')?.value||'current';let s=getDataLembur();if(filterMode==='current'){s=s.filter(i=>i.periodeKey===p.key)}s.sort((a,b)=>new Date(a.tanggal)-new Date(b.tanggal));const tb=document.getElementById('tabelBody');if(s.length===0)tb.innerHTML='<tr class="no-data"><td colspan="10">👆 SETUP NAMA & INPUT DATA</td></tr>';else tb.innerHTML=s.map((i,idx)=>{const jk=hitungJamKali(i.jamAsli,i.jenisHari);const rp=i.tarif?hitungRupiah(i.jamAsli,i.jenisHari,i.tarif):0;const rpDisplay=i.tarif?formatRupiah(rp):'-';const isHadir=i.jamAsli===0&&i.jenisHari==='biasa';const isOff=i.jamAsli===0&&i.jenisHari==='merah';let label,labelClass;if(isHadir){label='HADIR';labelClass='hadir-tag'}else if(isOff){label='OFF';labelClass='off-tag'}else{label=i.jamAsli;labelClass=''}return`<tr><td>${idx+1}</td><td>${formatTanggal(i.tanggal)}</td><td><span class="pengali-tag ${getTagClass(i.jenisHari)}">${getLabelJenis(i.jenisHari)}</span></td><td class="${labelClass}">${label}</td><td>${i.jamAsli===0?'-':getLabelPengali(i.jenisHari)}</td><td class="conv-ot-highlight">${jk.toFixed(1)}</td><td>${i.tarif?formatRupiah(i.tarif):'-'}</td><td class="total-rp-highlight">${rpDisplay}</td><td style="font-size:8px;max-width:60px;overflow:hidden;">${i.keterangan||'-'}</td><td><button class="btn-delete" onclick="hapusData('${i.id}')">x</button></td></tr>`}).join('');updateTotalizer(s);updateTanggalInput()}
+        function renderTabel(){const p=getPeriodeSekarang();const filterMode=document.getElementById('fPeriode')?.value||'current';let s=getDataLembur();if(filterMode==='current'){s=s.filter(i=>i.periodeKey===p.key)}s.sort((a,b)=>new Date(a.tanggal)-new Date(b.tanggal));const tb=document.getElementById('tabelBody');if(s.length===0)tb.innerHTML='<tr class="no-data"><td colspan="10">SETUP NAMA & INPUT DATA</td></tr>';else tb.innerHTML=s.map((i,idx)=>{const jk=hitungJamKali(i.jamAsli,i.jenisHari);const rp=i.tarif?hitungRupiah(i.jamAsli,i.jenisHari,i.tarif):0;const rpDisplay=i.tarif?formatRupiah(rp):'-';const isHadir=i.jamAsli===0&&i.jenisHari==='biasa';const isOff=i.jamAsli===0&&i.jenisHari==='merah';let label,labelClass;if(isHadir){label='HADIR';labelClass='hadir-tag'}else if(isOff){label='OFF';labelClass='off-tag'}else{label=i.jamAsli;labelClass=''}return`<tr><td>${idx+1}</td><td>${formatTanggal(i.tanggal)}</td><td><span class="pengali-tag ${getTagClass(i.jenisHari)}">${getLabelJenis(i.jenisHari)}</span></td><td class="${labelClass}">${label}</td><td>${i.jamAsli===0?'-':getLabelPengali(i.jenisHari)}</td><td class="conv-ot-highlight">${jk.toFixed(1)}</td><td>${i.tarif?formatRupiah(i.tarif):'-'}</td><td class="total-rp-highlight">${rpDisplay}</td><td style="font-size:8px;max-width:60px;overflow:hidden;">${i.keterangan||'-'}</td><td><button class="btn-delete" onclick="hapusData('${i.id}')">x</button></td></tr>`}).join('');updateTotalizer(s);updateTanggalInput()}
         function updateTanggalInput(){const p=getPeriodeSekarang(),inp=document.getElementById('tanggal');inp.min=fd(p.mulai);inp.max=fd(p.akhir);if(!inp.value){const t=new Date(),ts=fd(t);inp.value=isTanggalDalamPeriode(ts,p)?ts:fd(p.mulai)}cekLED()}
         function updateTrendBar(tk,B){if(!B||B<=0){document.getElementById('trendFill').style.width='0%';document.getElementById('trendPercent').textContent='Set OT';return}const pct=Math.min((tk/B)*100,100),f=document.getElementById('trendFill'),pt=document.getElementById('trendPercent');f.style.width=pct+'%';pt.textContent=pct.toFixed(0)+'%';f.classList.remove('safe','warning','danger');pt.classList.remove('safe','warning','danger');if(pct>=100){f.classList.add('danger');pt.classList.add('danger')}else if(pct>=75){f.classList.add('warning');pt.classList.add('warning')}else{f.classList.add('safe');pt.classList.add('safe')}}
         function updateTotalizer(s){const B=getBatasOT();let ta=0,tk=0,tr=0,hadir=0,off=0;s.forEach(i=>{ta+=i.jamAsli;if(i.jamAsli>0)tk+=hitungJamKali(i.jamAsli,i.jenisHari);else{if(i.jenisHari==='merah')off++;else hadir++}if(i.tarif&&i.jamAsli>0)tr+=hitungRupiah(i.jamAsli,i.jenisHari,i.tarif)});document.getElementById('totalJamAsli').textContent=ta.toFixed(1);document.getElementById('totalJamKali').textContent=tk.toFixed(1);document.getElementById('totalRupiah').textContent=formatRupiah(tr);document.getElementById('totalHadir').textContent=hadir;document.getElementById('totalOff').textContent=off;updateTrendBar(tk,B);const el=document.getElementById('totalJamKali'),ot=document.getElementById('overtimeAlert'),sj=document.getElementById('sisaJam');if(B>0&&tk>B){el.classList.add('warning');ot.classList.add('active');ot.innerHTML=`OVERTIME! MELEBIHI ${B} JAM (Kelebihan: ${(tk-B).toFixed(1)} jam)`;sj.className='sisa-jam bahaya show';sj.innerHTML=`KELEBIHAN: ${(tk-B).toFixed(1)} JAM`}else{el.classList.remove('warning');ot.classList.remove('active');sj.className='sisa-jam aman show';sj.innerHTML=B>0?`SISA: ${(B-tk).toFixed(1)} JAM`:'Batas OT belum diset'}}
@@ -451,7 +451,7 @@
         window.addEventListener('DOMContentLoaded',init);
         window.addEventListener('focus',renderTabel);
         if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').then(()=>console.log('PWA Ready')).catch(()=>console.log('SW not registered'))})}
-        let deferredPrompt;window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;if(document.getElementById('installPWA'))return;const btn=document.createElement('button');btn.id='installPWA';btn.innerText='📲 INSTALL APP';btn.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:14px 22px;border:none;border-radius:14px;background:#d4af37;color:#000;font-weight:bold;z-index:99999;box-shadow:0 0 20px rgba(212,175,55,0.5)';document.body.appendChild(btn);btn.addEventListener('click',async()=>{btn.remove();deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null})});
+        let deferredPrompt;window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;if(document.getElementById('installPWA'))return;const btn=document.createElement('button');btn.id='installPWA';btn.innerText='INSTALL APP';btn.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:14px 22px;border:none;border-radius:14px;background:#d4af37;color:#000;font-weight:bold;z-index:99999;box-shadow:0 0 20px rgba(212,175,55,0.5)';document.body.appendChild(btn);btn.addEventListener('click',async()=>{btn.remove();deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null})});
     </script>
 </body>
 </html>
